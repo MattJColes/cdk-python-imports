@@ -1,0 +1,27 @@
+{
+    "Resources" : {
+        "TestVPC" : {
+            "Type" : "AWS::EC2::VPC",
+            "DeletionPolicy" : "Retain",
+            "Properties" : {
+                "CidrBlock" : "10.2.0.0/16",
+                "EnableDnsSupport" : "false",
+                "EnableDnsHostnames" : "false",
+                "InstanceTenancy" : "dedicated",
+                "Tags" : [ 
+                    {"Key" : "stack", "Value" : "production"},
+                    {"Key" : "Name", "Value" : "TestVPC"}
+                ]
+            }
+        },
+        "TestSubnet" : {
+            "Type" : "AWS::EC2::Subnet",
+            "DeletionPolicy" : "Retain",
+            "Properties" : {
+                "CidrBlock" : "10.2.0.0/16",
+                "Tags" : [ {"Key" : "stack", "Value" : "production"} ],
+                "VpcId" : { "Ref" : "TestVPC" }
+            }
+        }
+    }
+}

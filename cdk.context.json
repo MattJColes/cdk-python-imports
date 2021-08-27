@@ -1,0 +1,21 @@
+{
+  "vpc-provider:account=491688732568:filter.isDefault=false:filter.tag:Name=TestVPC:region=ap-southeast-2:returnAsymmetricSubnets=true": {
+    "vpcId": "vpc-072f9bdae62b3a30b",
+    "vpcCidrBlock": "10.2.0.0/16",
+    "availabilityZones": [],
+    "subnetGroups": [
+      {
+        "name": "Private",
+        "type": "Private",
+        "subnets": [
+          {
+            "subnetId": "subnet-05ee6a69660f79466",
+            "cidr": "10.2.0.0/16",
+            "availabilityZone": "ap-southeast-2b",
+            "routeTableId": "rtb-009e4499a37f88f3b"
+          }
+        ]
+      }
+    ]
+  }
+}
