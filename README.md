@@ -15,7 +15,7 @@ To explore the project, open up ```cdk_python\cdk_python_stack.py```. The first 
 * Python 3.6+ installed: https://www.python.org/downloads/
 * NodeJS installed (for cdk cli): https://nodejs.org/en/download/
 * AWS CLI installed: https://docs.aws.amazon.com/cli/latest/userguide/install-cliv2.html
-* AWS ClI configured and linked to an aws account / user / region via running ```aws configure``` within your terminal
+* AWS CLI configured and linked to an aws account / user / region via running ```aws configure``` within your terminal
 
 ### Steps to run
 
