@@ -4,7 +4,7 @@
 Sample Project to showcase:
 
 * Importing cloudformation resources into CDK
-* Looking up existing resources using cdk `from_lookups`
+* Referencing existing resources using CDK `from_lookups` feature
 
 To explore the project, open up ```cdk_python\cdk_python_stack.py```. 
 The first section of this class imports cloudformation (located in the ```cdk_python\cformation_s3.json``` file) into your CDK project for use as part of your CDK stack. 
