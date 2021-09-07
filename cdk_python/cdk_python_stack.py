@@ -8,7 +8,6 @@ from aws_cdk import (
     aws_iam as iam
 )
 
-
 class CdkPythonStack(cdk.Stack):
 
     def __init__(self, scope: cdk.Construct, construct_id: str, **kwargs) -> None:
@@ -26,7 +25,7 @@ class CdkPythonStack(cdk.Stack):
         )
 
         # Use within CDK and convert to a L2 construct
-        existing_bucket_l1 = template.get_resource("S3B4E9YC")
+        existing_bucket_l1 = template.get_resource("MyBucket-S3B4E9YC")
         existing_bucket_l2 = s3.Bucket.from_bucket_name(
             self, "Bucket", existing_bucket_l1.ref
         )
