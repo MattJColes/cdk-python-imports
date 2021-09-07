@@ -1,0 +1,171 @@
+Metadata-Version: 2.1
+Name: aws-cdk.aws-docdb
+Version: 1.121.0
+Summary: The CDK Construct Library for AWS::DocDB
+Home-page: https://github.com/aws/aws-cdk
+Author: Amazon Web Services
+License: Apache-2.0
+Project-URL: Source, https://github.com/aws/aws-cdk.git
+Platform: UNKNOWN
+Classifier: Intended Audience :: Developers
+Classifier: Operating System :: OS Independent
+Classifier: Programming Language :: JavaScript
+Classifier: Programming Language :: Python :: 3 :: Only
+Classifier: Programming Language :: Python :: 3.6
+Classifier: Programming Language :: Python :: 3.7
+Classifier: Programming Language :: Python :: 3.8
+Classifier: Programming Language :: Python :: 3.9
+Classifier: Typing :: Typed
+Classifier: Development Status :: 5 - Production/Stable
+Classifier: License :: OSI Approved
+Classifier: Framework :: AWS CDK
+Classifier: Framework :: AWS CDK :: 1
+Requires-Python: >=3.6
+Description-Content-Type: text/markdown
+License-File: LICENSE
+License-File: NOTICE
+Requires-Dist: aws-cdk.aws-ec2 (==1.121.0)
+Requires-Dist: aws-cdk.aws-efs (==1.121.0)
+Requires-Dist: aws-cdk.aws-kms (==1.121.0)
+Requires-Dist: aws-cdk.aws-secretsmanager (==1.121.0)
+Requires-Dist: aws-cdk.core (==1.121.0)
+Requires-Dist: constructs (<4.0.0,>=3.3.69)
+Requires-Dist: jsii (<2.0.0,>=1.34.0)
+Requires-Dist: publication (>=0.0.3)
+
+# Amazon DocumentDB Construct Library
+
+<!--BEGIN STABILITY BANNER-->---
+
+
+![cfn-resources: Stable](https://img.shields.io/badge/cfn--resources-stable-success.svg?style=for-the-badge)
+
+![cdk-constructs: Stable](https://img.shields.io/badge/cdk--constructs-stable-success.svg?style=for-the-badge)
+
+---
+<!--END STABILITY BANNER-->
+
+## Starting a Clustered Database
+
+To set up a clustered DocumentDB database, define a `DatabaseCluster`. You must
+always launch a database in a VPC. Use the `vpcSubnets` attribute to control whether
+your instances will be launched privately or publicly:
+
+```python
+# Example automatically generated without compilation. See https://github.com/aws/jsii/issues/826
+cluster = DatabaseCluster(self, "Database",
+    master_user={
+        "username": "myuser"
+    },
+    instance_type=ec2.InstanceType.of(ec2.InstanceClass.R5, ec2.InstanceSize.LARGE),
+    vpc_subnets={
+        "subnet_type": ec2.SubnetType.PUBLIC
+    },
+    vpc=vpc
+)
+```
+
+By default, the master password will be generated and stored in AWS Secrets Manager with auto-generated description.
+
+Your cluster will be empty by default.
+
+## Connecting
+
+To control who can access the cluster, use the `.connections` attribute. DocumentDB databases have a default port, so
+you don't need to specify the port:
+
+```python
+# Example automatically generated. See https://github.com/aws/jsii/issues/826
+cluster.connections.allow_default_port_from_any_ipv4("Open to the world")
+```
+
+The endpoints to access your database cluster will be available as the `.clusterEndpoint` and `.clusterReadEndpoint`
+attributes:
+
+```python
+# Example automatically generated. See https://github.com/aws/jsii/issues/826
+write_address = cluster.cluster_endpoint.socket_address
+```
+
+If you have existing security groups you would like to add to the cluster, use the `addSecurityGroups` method. Security
+groups added in this way will not be managed by the `Connections` object of the cluster.
+
+```python
+# Example automatically generated without compilation. See https://github.com/aws/jsii/issues/826
+security_group = ec2.SecurityGroup(stack, "SecurityGroup",
+    vpc=vpc
+)
+cluster.add_security_groups(security_group)
+```
+
+## Deletion protection
+
+Deletion protection can be enabled on an Amazon DocumentDB cluster to prevent accidental deletion of the cluster:
+
+```python
+# Example automatically generated without compilation. See https://github.com/aws/jsii/issues/826
+cluster = DatabaseCluster(self, "Database",
+    master_user={
+        "username": "myuser"
+    },
+    instance_type=ec2.InstanceType.of(ec2.InstanceClass.R5, ec2.InstanceSize.LARGE),
+    vpc_subnets={
+        "subnet_type": ec2.SubnetType.PUBLIC
+    },
+    vpc=vpc,
+    deletion_protection=True
+)
+```
+
+## Rotating credentials
+
+When the master password is generated and stored in AWS Secrets Manager, it can be rotated automatically:
+
+```python
+# Example automatically generated without compilation. See https://github.com/aws/jsii/issues/826
+cluster.add_rotation_single_user()
+```
+
+```python
+# Example automatically generated. See https://github.com/aws/jsii/issues/826
+cluster = docdb.DatabaseCluster(stack, "Database",
+    master_user=Login(
+        username="docdb"
+    ),
+    instance_type=ec2.InstanceType.of(ec2.InstanceClass.R5, ec2.InstanceSize.LARGE),
+    vpc=vpc,
+    removal_policy=cdk.RemovalPolicy.DESTROY
+)
+
+cluster.add_rotation_single_user()
+```
+
+The multi user rotation scheme is also available:
+
+```python
+# Example automatically generated without compilation. See https://github.com/aws/jsii/issues/826
+cluster.add_rotation_multi_user("MyUser",
+    secret=my_imported_secret
+)
+```
+
+It's also possible to create user credentials together with the cluster and add rotation:
+
+```python
+# Example automatically generated without compilation. See https://github.com/aws/jsii/issues/826
+my_user_secret = docdb.DatabaseSecret(self, "MyUserSecret",
+    username="myuser",
+    master_secret=cluster.secret
+)
+my_user_secret_attached = my_user_secret.attach(cluster)# Adds DB connections information in the secret
+
+cluster.add_rotation_multi_user("MyUser", # Add rotation using the multi user scheme
+    secret=my_user_secret_attached)
+```
+
+**Note**: This user must be created manually in the database using the master credentials.
+The rotation will start as soon as this user exists.
+
+See also [@aws-cdk/aws-secretsmanager](https://github.com/aws/aws-cdk/blob/master/packages/%40aws-cdk/aws-secretsmanager/README.md) for credentials rotation of existing clusters.
+
+

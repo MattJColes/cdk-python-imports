@@ -1,0 +1,152 @@
+Metadata-Version: 2.1
+Name: aws-cdk.aws-servicecatalogappregistry
+Version: 1.121.0
+Summary: The CDK Construct Library for AWS::ServiceCatalogAppRegistry
+Home-page: https://github.com/aws/aws-cdk
+Author: Amazon Web Services
+License: Apache-2.0
+Project-URL: Source, https://github.com/aws/aws-cdk.git
+Platform: UNKNOWN
+Classifier: Intended Audience :: Developers
+Classifier: Operating System :: OS Independent
+Classifier: Programming Language :: JavaScript
+Classifier: Programming Language :: Python :: 3 :: Only
+Classifier: Programming Language :: Python :: 3.6
+Classifier: Programming Language :: Python :: 3.7
+Classifier: Programming Language :: Python :: 3.8
+Classifier: Programming Language :: Python :: 3.9
+Classifier: Typing :: Typed
+Classifier: Development Status :: 4 - Beta
+Classifier: License :: OSI Approved
+Classifier: Framework :: AWS CDK
+Classifier: Framework :: AWS CDK :: 1
+Requires-Python: >=3.6
+Description-Content-Type: text/markdown
+License-File: LICENSE
+License-File: NOTICE
+Requires-Dist: aws-cdk.core (==1.121.0)
+Requires-Dist: constructs (<4.0.0,>=3.3.69)
+Requires-Dist: jsii (<2.0.0,>=1.34.0)
+Requires-Dist: publication (>=0.0.3)
+
+# AWS ServiceCatalogAppRegistry Construct Library
+
+<!--BEGIN STABILITY BANNER-->---
+
+
+![cfn-resources: Stable](https://img.shields.io/badge/cfn--resources-stable-success.svg?style=for-the-badge)
+
+> All classes with the `Cfn` prefix in this module ([CFN Resources](https://docs.aws.amazon.com/cdk/latest/guide/constructs.html#constructs_lib)) are always stable and safe to use.
+
+![cdk-constructs: Experimental](https://img.shields.io/badge/cdk--constructs-experimental-important.svg?style=for-the-badge)
+
+> The APIs of higher level constructs in this module are experimental and under active development.
+> They are subject to non-backward compatible changes or removal in any future version. These are
+> not subject to the [Semantic Versioning](https://semver.org/) model and breaking changes will be
+> announced in the release notes. This means that while you may use them, you may need to update
+> your source code when upgrading to a newer version of this package.
+
+---
+<!--END STABILITY BANNER-->
+
+[AWS Service Catalog App Registry](https://docs.aws.amazon.com/servicecatalog/latest/adminguide/appregistry.html)
+enables organizations to create and manage repositores of applications and associated resources.
+
+## Table Of Contents
+
+* [Application](#application)
+* [Attribute-Group](#attribute-group)
+* [Associations](#associations)
+
+  * [Associating application with an attribute group](#attribute-group-association)
+  * [Associating application with a stack](#resource-association)
+
+The `@aws-cdk/aws-servicecatalogappregistry` package contains resources that enable users to automate governance and management of their AWS resources at scale.
+
+```python
+# Example automatically generated. See https://github.com/aws/jsii/issues/826
+import aws_cdk.aws_servicecatalogappregistry as appreg
+```
+
+## Application
+
+An AppRegistry application enables you to define your applications and associated resources.
+The application name must be unique at the account level, but is mutable.
+
+```python
+# Example automatically generated without compilation. See https://github.com/aws/jsii/issues/826
+application = appreg.Application(self, "MyFirstApplication",
+    application_name="MyFirstApplicationName",
+    description="description for my application"
+)
+```
+
+An application that has been created outside of the stack can be imported into your CDK app.
+Applications can be imported by their ARN via the `Application.fromApplicationArn()` API:
+
+```python
+# Example automatically generated without compilation. See https://github.com/aws/jsii/issues/826
+imported_application = appreg.Application.from_application_arn(self, "MyImportedApplication", "arn:aws:servicecatalog:us-east-1:012345678910:/applications/0aqmvxvgmry0ecc4mjhwypun6i")
+```
+
+## Attribute Group
+
+An AppRegistry attribute group acts as a container for user-defined attributes for an application.
+Metadata is attached in a machine-readble format to integrate with automated workflows and tools.
+
+```python
+# Example automatically generated without compilation. See https://github.com/aws/jsii/issues/826
+attribute_group = appreg.AttributeGroup(self, "MyFirstAttributeGroup",
+    attribute_group_name="MyFirstAttributeGroupName",
+    description="description for my attribute group", # the description is optional,
+    attributes={
+        "project": "foo",
+        "team": ["member1", "member2", "member3"],
+        "public": False,
+        "stages": {
+            "alpha": "complete",
+            "beta": "incomplete",
+            "release": "not started"
+        }
+    }
+)
+```
+
+An attribute group that has been created outside of the stack can be imported into your CDK app.
+Attribute groups can be imported by their ARN via the `AttributeGroup.fromAttributeGroupArn()` API:
+
+```python
+# Example automatically generated without compilation. See https://github.com/aws/jsii/issues/826
+imported_attribute_group = appreg.AttributeGroup.from_attribute_group_arn(self, "MyImportedAttrGroup", "arn:aws:servicecatalog:us-east-1:012345678910:/attribute-groups/0aqmvxvgmry0ecc4mjhwypun6i")
+```
+
+## Associations
+
+You can associate your appregistry application with attribute groups and resources.
+Resources are CloudFormation stacks that you can associate with an application to group relevant
+stacks together to enable metadata rich insights into your applications and resources.
+A Cloudformation stack can only be associated with one appregistry application.
+If a stack is associated with multiple applications in your app or is already associated with one,
+CDK will fail at deploy time.
+
+### Associating application with an attribute group
+
+You can associate an attribute group with an application with the `associateAttributeGroup()` API:
+
+```python
+# Example automatically generated without compilation. See https://github.com/aws/jsii/issues/826
+application.associate_attribute_group(attribute_group)
+```
+
+### Associating application with a Stack
+
+You can associate a stack with an application with the `associateStack()` API:
+
+```python
+# Example automatically generated without compilation. See https://github.com/aws/jsii/issues/826
+my_stack = cdk.Stack(app, "MyStack")
+
+application.associate_stack(my_stack)
+```
+
+
